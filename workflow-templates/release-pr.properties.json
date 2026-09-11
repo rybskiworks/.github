@@ -1,0 +1,7 @@
+{
+  "name": "Rybskiworks release PR preparation",
+  "description": "Opt-in version/changelog PRs only. Never tags, publishes or auto-merges.",
+  "categories": [
+    "Automation"
+  ]
+}

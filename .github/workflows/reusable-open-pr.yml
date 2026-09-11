@@ -1,0 +1,59 @@
+name: Open a managed draft PR
+on:
+  workflow_call:
+    inputs:
+      head:
+        required: true
+        type: string
+      base:
+        required: true
+        type: string
+      kind:
+        description: agent or upstream; labels and branch names are not authentication.
+        required: true
+        type: string
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  open:
+    if: github.repository_owner == 'rybskiworks'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    concurrency:
+      group: managed-pr-${{ github.repository }}-${{ inputs.base }}-${{ inputs.head }}
+      cancel-in-progress: false
+    steps:
+      # No checkout, no contents-write permission and no external App key.
+      - uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        env:
+          HEAD_BRANCH: ${{ inputs.head }}
+          BASE_BRANCH: ${{ inputs.base }}
+          PR_KIND: ${{ inputs.kind }}
+        with:
+          script: |
+            const {owner, repo} = context.repo;
+            const {HEAD_BRANCH: head, BASE_BRANCH: base, PR_KIND: kind} = process.env;
+            const prefix = {agent: 'agents/', upstream: 'upstream/'}[kind];
+            const valid = x => typeof x === 'string' && /^[A-Za-z0-9][A-Za-z0-9._/-]*$/.test(x)
+              && !x.includes('..') && !x.includes('//') && !x.endsWith('/') && !x.endsWith('.lock');
+            if (!prefix || !valid(head) || !valid(base) || !head.startsWith(prefix) || head === base) {
+              throw new Error('Invalid managed PR branch policy');
+            }
+            // Respect human closure; do not reopen or recreate closed PRs.
+            const existing = await github.paginate(github.rest.pulls.list,
+              {owner, repo, state: 'all', head: `${owner}:${head}`, base, per_page: 100});
+            if (existing.some(pr => pr.state === 'open' || !pr.merged_at) ||
+                (kind === 'agent' && existing.length)) {
+              core.info('Existing or human-closed PR; no changes.'); return;
+            }
+            const comparison = await github.rest.repos.compareCommitsWithBasehead(
+              {owner, repo, basehead: `${base}...${head}`});
+            if (comparison.data.ahead_by === 0) { core.info('No new commits to propose.'); return; }
+            const result = await github.rest.pulls.create({owner, repo, head, base, draft: true,
+              title: `chore(${kind}): review ${head}`,
+              body: `Automated draft for \`${head}\` into \`${base}\`.\n\n` +
+                'Review the diff, compatibility and actual CI evidence before marking ready. ' +
+                'No approval, merge, upstream conflict resolution, or identity verification is implied. ' +
+                'With GITHUB_TOKEN, GitHub may require a human to approve the resulting workflow runs.'});
+            core.info(`Created draft PR #${result.data.number}`);

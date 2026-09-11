@@ -1,0 +1,13 @@
+# Replace REVIEWED_GOVERNANCE_COMMIT with the reviewed .github commit before use.
+# Templates are not executable workflows until copied into a consumer repository.
+name: PR policy
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited, ready_for_review]
+permissions:
+  contents: read
+jobs:
+  title:
+    uses: rybskiworks/.github/.github/workflows/reusable-pr-title.yml@REVIEWED_GOVERNANCE_COMMIT
+    with:
+      title: ${{ github.event.pull_request.title }}

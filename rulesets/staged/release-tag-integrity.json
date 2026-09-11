@@ -1,0 +1,33 @@
+{
+  "name": "rw-release-tag-integrity-v1",
+  "target": "tag",
+  "enforcement": "disabled",
+  "bypass_actors": [],
+  "conditions": {
+    "repository_name": {
+      "include": [
+        "nix-tooling",
+        "workestrate"
+      ],
+      "exclude": [],
+      "protected": false
+    },
+    "ref_name": {
+      "include": [
+        "refs/tags/v*"
+      ],
+      "exclude": []
+    }
+  },
+  "rules": [
+    {
+      "type": "update",
+      "parameters": {
+        "update_allows_fetch_and_merge": false
+      }
+    },
+    {
+      "type": "deletion"
+    }
+  ]
+}

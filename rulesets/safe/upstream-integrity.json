@@ -1,0 +1,30 @@
+{
+  "name": "rw-upstream-integrity-v1",
+  "target": "branch",
+  "enforcement": "active",
+  "bypass_actors": [],
+  "conditions": {
+    "repository_name": {
+      "include": [
+        "~ALL"
+      ],
+      "exclude": [],
+      "protected": false
+    },
+    "ref_name": {
+      "include": [
+        "refs/heads/upstream/*",
+        "refs/heads/upstream/**/*"
+      ],
+      "exclude": []
+    }
+  },
+  "rules": [
+    {
+      "type": "deletion"
+    },
+    {
+      "type": "non_fast_forward"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+# Works with an EXISTING tracking ref. Importing/fetching upstream is separate.
+# Replace the reviewed commit and tracking branch before adopting this template.
+name: Upstream review PR
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  pull-requests: write
+concurrency:
+  group: upstream-pr
+  cancel-in-progress: false
+jobs:
+  open:
+    if: vars.RYBSKIWORKS_UPSTREAM_PRS == 'true' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    uses: rybskiworks/.github/.github/workflows/reusable-open-pr.yml@REVIEWED_GOVERNANCE_COMMIT
+    with:
+      head: upstream/OWNER/BRANCH
+      base: $default-branch
+      kind: upstream

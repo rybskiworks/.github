@@ -1,0 +1,19 @@
+# Replace REVIEWED_GOVERNANCE_COMMIT with a reviewed full commit SHA before use.
+name: Agent draft PR
+on:
+  push:
+    branches: ['agents/**']
+permissions:
+  contents: read
+  pull-requests: write
+concurrency:
+  group: agent-pr-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  open:
+    if: vars.RYBSKIWORKS_AGENT_PRS == 'true' && !github.event.deleted
+    uses: rybskiworks/.github/.github/workflows/reusable-open-pr.yml@REVIEWED_GOVERNANCE_COMMIT
+    with:
+      head: ${{ github.ref_name }}
+      base: $default-branch
+      kind: agent

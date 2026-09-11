@@ -1,0 +1,7 @@
+{
+  "name": "Rybskiworks upstream review PR",
+  "description": "Propose an existing permanent upstream tracking branch without merging it.",
+  "categories": [
+    "Automation"
+  ]
+}

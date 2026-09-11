@@ -1,0 +1,7 @@
+{
+  "name": "Rybskiworks agent draft PR",
+  "description": "Opt-in, idempotent draft PR creation. No automatic merge or approval.",
+  "categories": [
+    "Automation"
+  ]
+}
