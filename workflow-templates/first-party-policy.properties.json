@@ -1,7 +1,5 @@
 {
   "name": "Rybskiworks first-party PR policy",
-  "description": "Conventional titles through a reviewed immutable reusable workflow. Replace the commit placeholder before committing.",
-  "categories": [
-    "Continuous integration"
-  ]
+  "description": "Conventional titles through a reviewed immutable reusable workflow.",
+  "categories": ["Continuous integration"]
 }
