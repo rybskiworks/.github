@@ -1,0 +1,30 @@
+name: Governance CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: governance-ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  policy:
+    name: Governance / required
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Test create-only policy tools and automation decisions
+        run: python3 -m unittest discover -s tests -v
+      - name: Validate rule definitions without GitHub access
+        run: python3 scripts/rulesets.py --validate-only
+      - name: Test metadata-only draft PR decisions
+        run: node tests/test_open_pr.mjs
+      - uses: taiki-e/install-action@7b8d4719ee4aaa279bdf55df38dacb9ebfe12a6c # v2.87.6
+        with:
+          tool: actionlint@1.7.7
+      - run: actionlint

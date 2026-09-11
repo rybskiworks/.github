@@ -1,0 +1,18 @@
+# Configure release metadata and protection before opting in.
+name: Release PR
+on:
+  push:
+    branches: [$default-branch]
+  workflow_dispatch:
+permissions:
+  contents: write
+  pull-requests: write
+concurrency:
+  group: release-pr-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  prepare:
+    if: vars.RYBSKIWORKS_RELEASE_PRS == 'true'
+    uses: rybskiworks/.github/.github/workflows/reusable-release-pr.yml@3a7ef7dd7d23aedba866cb3a3a5df26ff2f86a7c
+    with:
+      target-branch: $default-branch

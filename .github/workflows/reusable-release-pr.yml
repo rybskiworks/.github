@@ -1,0 +1,28 @@
+name: Prepare release PR
+on:
+  workflow_call:
+    inputs:
+      target-branch:
+        required: true
+        type: string
+    secrets:
+      release-token:
+        description: Optional short-lived repository-scoped token. Never pass an App private key.
+        required: false
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  prepare:
+    if: github.repository_owner == 'rybskiworks' && github.ref == format('refs/heads/{0}', inputs.target-branch)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      # API-only: no checkout or execution of repository code in this write job.
+      - uses: googleapis/release-please-action@5c625bfb5d1ff62eadeeb3772007f7f66fdcf071 # v4
+        with:
+          token: ${{ secrets.release-token || github.token }}
+          target-branch: ${{ inputs.target-branch }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+          skip-github-release: true

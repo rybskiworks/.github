@@ -1,0 +1,17 @@
+{
+  "name": "rw-workestrate-edge-pr-v1",
+  "target": "branch",
+  "enforcement": "disabled",
+  "bypass_actors": [{"actor_type": "OrganizationAdmin", "bypass_mode": "pull_request"}],
+  "conditions": {
+    "repository_name": {"include": ["workestrate"], "exclude": [], "protected": false},
+    "ref_name": {"include": ["refs/heads/migration/tool-model"], "exclude": []}
+  },
+  "rules": [{"type": "pull_request", "parameters": {
+    "dismiss_stale_reviews_on_push": false,
+    "require_code_owner_review": false,
+    "require_last_push_approval": false,
+    "required_approving_review_count": 0,
+    "required_review_thread_resolution": true
+  }}]
+}

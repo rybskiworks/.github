@@ -1,0 +1,15 @@
+name: Bug report
+description: Report a reproducible defect without sensitive data.
+body:
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Include the revision, environment, steps, expected result and actual result. Redact secrets.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence and impact
+      description: Sanitized logs and affected behavior. Use private reporting for sensitive vulnerabilities.

@@ -1,0 +1,36 @@
+name: Pinned Nix check
+on:
+  workflow_call:
+    inputs:
+      tier:
+        description: evaluate checks without building them, or full to execute all flake checks.
+        type: string
+        required: true
+permissions:
+  contents: read
+jobs:
+  nix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31
+        with:
+          install_url: https://releases.nixos.org/nix/nix-2.34.8/install
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            max-jobs = 2
+            cores = 2
+      - name: Run explicitly selected tier
+        env:
+          CHECK_TIER: ${{ inputs.tier }}
+        run: |
+          set -euo pipefail
+          case "$CHECK_TIER" in
+            evaluate) nix flake check --no-build --no-update-lock-file ;;
+            full) nix flake check --keep-going --print-build-logs --no-update-lock-file ;;
+            *) echo 'Unsupported check tier' >&2; exit 1 ;;
+          esac
+          git diff --exit-code HEAD -- flake.lock

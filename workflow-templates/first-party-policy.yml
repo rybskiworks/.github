@@ -1,0 +1,11 @@
+name: PR policy
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited, ready_for_review]
+permissions:
+  contents: read
+jobs:
+  title:
+    uses: rybskiworks/.github/.github/workflows/reusable-pr-title.yml@3a7ef7dd7d23aedba866cb3a3a5df26ff2f86a7c
+    with:
+      title: ${{ github.event.pull_request.title }}

@@ -1,0 +1,26 @@
+name: Conventional PR title
+on:
+  workflow_call:
+    inputs:
+      title:
+        description: PR title treated as data, never shell source.
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  title:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Validate first-party PR title
+        env:
+          PR_TITLE: ${{ inputs.title }}
+        run: |
+          python3 - <<'PYCODE'
+          import os, re
+          title = os.environ['PR_TITLE']
+          pattern = r'(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([a-zA-Z0-9_. /-]+\))?!?: [^\r\n]+'
+          if len(title) > 256 or re.fullmatch(pattern, title) is None:
+              raise SystemExit('Use a Conventional Commit PR title; explain breaking changes in the PR.')
+          PYCODE

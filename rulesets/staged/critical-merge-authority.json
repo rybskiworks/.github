@@ -1,0 +1,36 @@
+{
+  "name": "rw-critical-merge-authority-v1",
+  "target": "branch",
+  "enforcement": "disabled",
+  "bypass_actors": [
+    {
+      "actor_type": "OrganizationAdmin",
+      "bypass_mode": "always"
+    }
+  ],
+  "conditions": {
+    "repository_name": {
+      "include": [
+        ".github",
+        "nix-tooling",
+        "workestrate"
+      ],
+      "exclude": [],
+      "protected": false
+    },
+    "ref_name": {
+      "include": [
+        "~DEFAULT_BRANCH"
+      ],
+      "exclude": []
+    }
+  },
+  "rules": [
+    {
+      "type": "update",
+      "parameters": {
+        "update_allows_fetch_and_merge": false
+      }
+    }
+  ]
+}

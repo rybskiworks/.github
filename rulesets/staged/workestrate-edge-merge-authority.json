@@ -1,0 +1,11 @@
+{
+  "name": "rw-workestrate-edge-merge-authority-v1",
+  "target": "branch",
+  "enforcement": "disabled",
+  "bypass_actors": [{"actor_type": "OrganizationAdmin", "bypass_mode": "always"}],
+  "conditions": {
+    "repository_name": {"include": ["workestrate"], "exclude": [], "protected": false},
+    "ref_name": {"include": ["refs/heads/migration/tool-model"], "exclude": []}
+  },
+  "rules": [{"type": "update", "parameters": {"update_allows_fetch_and_merge": false}}]
+}
