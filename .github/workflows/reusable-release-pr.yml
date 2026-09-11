@@ -19,7 +19,7 @@ jobs:
     timeout-minutes: 15
     steps:
       # API-only: no checkout or execution of repository code in this write job.
-      - uses: googleapis/release-please-action@5c625bfb5d1ff62eadeeb3772007f7f66fdcf071 # v4
+      - uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
         with:
           token: ${{ secrets.release-token || github.token }}
           target-branch: ${{ inputs.target-branch }}
